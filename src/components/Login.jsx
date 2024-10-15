@@ -2,7 +2,8 @@ import queryString from "query-string";
 import AuthLayout from "./AuthLayout";
 import { useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
-
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 export default function Login() {
   const { search } = useLocation();
   const values = queryString.parse(search);
@@ -17,7 +18,25 @@ export default function Login() {
   });
 
   function handleLogin(data) {
-    console.log(data, "---");
+    //https://kiwitter-node-77f5acb427c1.herokuapp.com/login
+    // dark_magician
+    // 123456
+
+    axios
+      .post("https://kiwitter-node-77f5acb427c1.herokuapp.com/login", data)
+      .then(res=> {
+        
+        const token = res.data.token;
+        
+        const decoded = jwtDecode(token);
+
+        console.log(decoded);
+
+        localStorage.setItem("kiwitter_user", token);
+
+        
+      })
+      .catch(err=>console.log(err));
   }
 
   return (

@@ -1,5 +1,6 @@
 import AuthLayout from "./AuthLayout";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 
 export default function Signup() {
   const {
@@ -11,7 +12,11 @@ export default function Signup() {
   });
 
   function handleSignup(data) {
-    console.log(data, "---");
+    
+    axios
+    .post("https://kiwitter-node-77f5acb427c1.herokuapp.com/users/signup", data)
+    .then(res=> console.log(res.data))
+    .catch(err=> console.log(err));
   }
 
   return (
@@ -86,7 +91,7 @@ export default function Signup() {
             type="submit"
             className="h-12 text-center block w-full rounded-lg bg-lime-700 text-white font-bold "
           >
-            GİRİŞ
+            KAYIT OL
           </button>
         </div>
       </form>
