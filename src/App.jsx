@@ -5,6 +5,8 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import PrivateRoute from "./components/PrivateRoute";
 import { UserContextProvider } from "./contexts/UserContext";
+import MainPage from "./components/MainPage";
+import UserTwits from "./components/UserTwits";
 
 
 function App() {
@@ -21,10 +23,10 @@ function App() {
 
           <Route path="/" exact>
             {/* /?variant=most_liked */}
-            <PageLayout>Home</PageLayout>
+            <MainPage />
           </Route>
           <Route path="/profile/:nick">
-            <PageLayout>Profile page</PageLayout>
+            <UserTwits />
           </Route>
           <PrivateRoute path="/detail/:twitId">
             <PageLayout>Twit detail</PageLayout>
