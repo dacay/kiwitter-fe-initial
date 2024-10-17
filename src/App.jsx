@@ -3,6 +3,7 @@ import { Switch, Route } from "react-router-dom";
 import PageLayout from "./components/PageLayout";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
+import PrivateRoute from "./components/PrivateRoute";
 import { UserContextProvider } from "./contexts/UserContext";
 
 
@@ -25,9 +26,9 @@ function App() {
           <Route path="/profile/:nick">
             <PageLayout>Profile page</PageLayout>
           </Route>
-          <Route path="/detail/:twitId">
+          <PrivateRoute path="/detail/:twitId">
             <PageLayout>Twit detail</PageLayout>
-          </Route>
+          </PrivateRoute>
         </Switch>
       </UserContextProvider>
     </div>

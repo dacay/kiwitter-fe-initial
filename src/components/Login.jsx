@@ -1,13 +1,15 @@
 import queryString from "query-string";
 import AuthLayout from "./AuthLayout";
-import { useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
+
 export default function Login() {
-  const { search } = useLocation();
-  const values = queryString.parse(search);
-  console.log(values.expiresIn, "***");
+  // const { search } = useLocation();
+  // const values = queryString.parse(search);
+  // console.log(values.expiresIn, "***");
 
   const {
     register,
@@ -16,6 +18,8 @@ export default function Login() {
   } = useForm({
     mode: "onChange",
   });
+
+  const history = useHistory();
 
   function handleLogin(data) {
     //https://kiwitter-node-77f5acb427c1.herokuapp.com/login
@@ -34,9 +38,20 @@ export default function Login() {
 
         localStorage.setItem("kiwitter_user", token);
 
-        
+        toast.success("Giriş başarılı. Ana sayfaya yönlendiriliyorsunuz.");
+
+        setTimeout(() => {
+
+          history.push("/");
+
+        }, 3000);
       })
-      .catch(err=>console.log(err));
+      .catch(err=>{
+        
+        console.log(err);
+
+        toast.error("Giriş başarısız.")
+      });
   }
 
   return (
