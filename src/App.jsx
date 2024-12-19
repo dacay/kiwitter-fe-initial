@@ -3,7 +3,9 @@ import { Switch, Route } from "react-router-dom";
 import PageLayout from "./PageLayout";
 import Login from "./Login";
 import Signup from "./Signup";
+import MainPage from "./MainPage";
 import { AuthContextProvider } from "./contexts/AuthContext";
+import PrivateRoute from "./PrivateRoute";
 
 function App() {
   return (
@@ -19,14 +21,14 @@ function App() {
 
           <Route path="/" exact>
             {/* /?variant=most_liked */}
-            <PageLayout>Home</PageLayout>
+            <MainPage />
           </Route>
           <Route path="/profile/:nick">
             <PageLayout>Profile page</PageLayout>
           </Route>
-          <Route path="/detail/:twitId">
+          <PrivateRoute path="/detail/:twitId">
             <PageLayout>Twit detail</PageLayout>
-          </Route>
+          </PrivateRoute>
         </Switch>
       </AuthContextProvider>
     </div>

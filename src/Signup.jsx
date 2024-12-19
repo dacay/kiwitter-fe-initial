@@ -1,9 +1,18 @@
+
+import { useContext } from "react"; 
 import AuthLayout from "./AuthLayout";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { AuthContext } from "./contexts/AuthContext";
+import { jwtDecode } from "jwt-decode";
+import { useHistory } from "react-router-dom";
 
 export default function Signup() {
+
+  const { setUser } = useContext(AuthContext);
+  const history = useHistory();
+
   const {
     register,
     handleSubmit,
@@ -20,7 +29,28 @@ export default function Signup() {
       url: "https://kiwitter-node-77f5acb427c1.herokuapp.com/users/signup",
       data: data
     }).then(response=> {
-      console.log(response.data);
+
+            const token = response.data.token;
+      
+            const decodedJwtToken = jwtDecode(token);
+      
+            console.log(decodedJwtToken, "$$$$$$$$");
+      
+            setUser(decodedJwtToken);
+      
+            localStorage.setItem("kiwitter_user", token);
+      
+            toast.success("Kayit basarili, Ana sayfaya yonlendiriliyorsunuz", {
+              position: "top-center",
+              theme: "light",
+              autoClose: 2000,
+              draggable: false
+            });
+      
+            setTimeout(()=> {
+              history.push("/");
+            }, 2000);
+      
     }).catch(error => {
       toast.error(error.message, {
         position: "top-center",
