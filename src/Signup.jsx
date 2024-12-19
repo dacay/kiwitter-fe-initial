@@ -1,17 +1,35 @@
 import AuthLayout from "./AuthLayout";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function Signup() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    reset,
+    formState: { errors, isValid},
   } = useForm({
     mode: "onChange",
   });
 
   function handleSignup(data) {
-    console.log(data, "---");
+    console.log(data);
+    axios({
+      method: "post",
+      url: "https://kiwitter-node-77f5acb427c1.herokuapp.com/users/signup",
+      data: data
+    }).then(response=> {
+      console.log(response.data);
+    }).catch(error => {
+      toast.error(error.message, {
+        position: "top-center",
+        theme: "light",
+        autoClose: 2000,
+        draggable: false
+      });
+      reset();
+    })
   }
 
   return (
@@ -30,7 +48,10 @@ export default function Signup() {
           <input
             type="text"
             className="w-full h-10 px-2 border rounded-md border-gray-300"
-            {...register("name", { required: "Bu alan zorunlu" })}
+            {...register("name", { required: "Bu alan zorunlu", minLength: {
+              value: 10,
+              message: "Isim 10 harften kucuk olamaz"
+            } })}
           />
         </div>
 
@@ -85,8 +106,9 @@ export default function Signup() {
           <button
             type="submit"
             className="h-12 text-center block w-full rounded-lg bg-lime-700 text-white font-bold "
+            disabled={!isValid}
           >
-            GİRİŞ
+            KAYIT OL
           </button>
         </div>
       </form>

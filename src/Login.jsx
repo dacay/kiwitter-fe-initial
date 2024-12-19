@@ -1,8 +1,13 @@
 import queryString from "query-string";
+import axios from "axios";
 import AuthLayout from "./AuthLayout";
 import { useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
-
+import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
+import { useHistory } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "./contexts/AuthContext";
 export default function Login() {
   const { search } = useLocation();
   const values = queryString.parse(search);
@@ -11,13 +16,59 @@ export default function Login() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    reset,
+    formState: { errors, isValid },
   } = useForm({
     mode: "onChange",
   });
 
+  const history = useHistory();
+  const { setUser } = useContext(AuthContext);
+
   function handleLogin(data) {
-    console.log(data, "---");
+    //console.log(data, "---");
+    axios({
+      method: "post",
+      url: "https://kiwitter-node-77f5acb427c1.herokuapp.com/login",
+      data: data
+    }).then(response => {
+      //console.log(response.data);
+      const token = response.data.token;
+
+      const decodedJwtToken = jwtDecode(token);
+
+      console.log(decodedJwtToken, "$$$$$$$$");
+
+      setUser(decodedJwtToken);
+
+      localStorage.setItem("kiwitter_user", token);
+
+      toast.success("Giris basarili, Ana sayfaya yonlendiriliyorsunuz", {
+        position: "top-center",
+        theme: "light",
+        autoClose: 2000,
+        draggable: false
+      });
+
+      setTimeout(()=> {
+        history.push("/");
+      }, 2000);
+      // history.push("/");
+    
+    }).catch(error=> {
+      //console.log(error);
+      //reset({ "password": "" });
+      toast.error(error.message, {
+        position: "top-center",
+        theme: "light",
+        autoClose: 3000,
+        draggable: false,
+
+      });
+    }).finally(()=> {
+      reset();
+    });
+    
   }
 
   return (
@@ -57,6 +108,7 @@ export default function Login() {
           <button
             type="submit"
             className="h-12 text-center block w-full rounded-lg bg-lime-700 text-white font-bold "
+            disabled={!isValid}
           >
             GİRİŞ
           </button>
